@@ -170,8 +170,8 @@ class BreakoutEnv(gym.Env):
       self.wall.build_wall(self.width)
       self.lives = self.max_lives
       self.score = 0
-      self.batrect = self.batrect.move((self.width / 2) - (self.batrect.right / 2), self.height - 20)
-      self.ballrect = self.ballrect.move(self.width / 2, self.height / 2) 
+      #self.batrect = self.batrect.move((self.width / 2) - (self.batrect.right / 2), self.height - 20)
+      #self.ballrect = self.ballrect.move(self.width / 2, self.height / 2) 
       return np.array([self.batrect.left, self.batrect.right, self.ballrect.left, self.ballrect.right], dtype=np.float32)
 
   def render(self, mode='human'):
@@ -186,8 +186,7 @@ class BreakoutEnv(gym.Env):
     
       self.screen.blit(self.ball, self.ballrect)
       self.screen.blit(self.bat, self.batrect)
-      #pygame.display.flip()
-      pygame.display.update()
+      pygame.display.flip()
       self.clock.tick(60)
 
   def close(self):
@@ -198,14 +197,15 @@ class BreakoutEnv(gym.Env):
       print(self.score)
       print("=====")
 
-env = BreakoutEnv()
-model = PPO('MlpPolicy', env, verbose=1)
-model.learn(total_timesteps=100000)
-obs = env.reset()
+if __name__=="__main__":
+    env = BreakoutEnv()
+    model = PPO('MlpPolicy', env, verbose=1)
+    model.learn(total_timesteps=100000)
+    obs = env.reset()
 
-for i in range(2000):
-    action, _state = model.predict(obs, deterministic=True)
-    obs, reward, done, info = env.step(action)
-    env.render()
-    if done:
-      obs = env.reset()
+    for i in range(2000):
+        action, _state = model.predict(obs, deterministic=True)
+        obs, reward, done, info = env.step(action)
+        env.render()
+        if done:
+            obs = env.reset()
