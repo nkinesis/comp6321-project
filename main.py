@@ -93,7 +93,7 @@ class BreakoutEnv(gym.Env):
         self.yspeed = -self.yspeed                
         self.soundCtrl.play(0)                
         offset = self.ballrect.center[0] - self.batrect.center[0]   
-        self.score += 500 # reward +                   
+        self.score += 1 # reward +                   
         # offset > 0 means ball has hit RHS of bat                   
         # vary angle of ball depending on where ball hits bat                      
         if offset > 0:
@@ -157,7 +157,15 @@ class BreakoutEnv(gym.Env):
         self.xspeed = self.xspeed_init
         self.yspeed = self.yspeed_init                
         self.ballrect.center = self.width / 2, self.height / 3
-                    
+
+    # reward for following the ball
+    dif_l = abs(self.ballrect.left - self.batrect.left)
+    dif_r = abs(self.ballrect.right - self.batrect.right)    
+    if dif_l < 50 or dif_r < 50:
+        self.score += 10
+    else:
+        self.score -= 10
+
     reward = self.score
     done = (self.lives == 0)
     info = {}
