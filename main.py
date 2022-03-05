@@ -35,14 +35,14 @@ class BreakoutEnv(gym.Env):
     self.clock = pygame.time.Clock()
     self.screen = pygame.display.set_mode(self.size)
 
-    self.bat = pygame.image.load("bat.png").convert()
+    self.bat = pygame.image.load("assets/bat.png").convert()
     self.batrect = self.bat.get_rect()
 
-    self.ball = pygame.image.load("ball.png").convert()
+    self.ball = pygame.image.load("assets/ball.png").convert()
     self.ball.set_colorkey((255, 255, 255))
     self.ballrect = self.ball.get_rect()
     
-    self.soundCtrl = pygame.mixer.Sound('Blip_1-Surround-147.wav')
+    self.soundCtrl = pygame.mixer.Sound('assets/blip.wav')
     self.soundCtrl.set_volume(10)        
     
     self.wall = Wall()

@@ -40,14 +40,14 @@ class Breakout():
         screen = pygame.display.set_mode(size)
         #screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
 
-        bat = pygame.image.load("bat.png").convert()
+        bat = pygame.image.load("assets/bat.png").convert()
         batrect = bat.get_rect()
 
-        ball = pygame.image.load("ball.png").convert()
+        ball = pygame.image.load("assets/ball.png").convert()
         ball.set_colorkey((255, 255, 255))
         ballrect = ball.get_rect()
        
-        pong = pygame.mixer.Sound('Blip_1-Surround-147.wav')
+        pong = pygame.mixer.Sound('assets/blip.wav')
         pong.set_volume(10)        
         
         wall = Wall()
@@ -198,7 +198,7 @@ class Breakout():
 class Wall():
 
     def __init__(self):
-        self.brick = pygame.image.load("brick.png").convert()
+        self.brick = pygame.image.load("assets/brick.png").convert()
         brickrect = self.brick.get_rect()
         self.bricklength = brickrect.right - brickrect.left       
         self.brickheight = brickrect.bottom - brickrect.top             

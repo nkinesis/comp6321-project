@@ -3,7 +3,7 @@ import pygame
 class Wall():
     
     def __init__(self):
-        self.brick = pygame.image.load("brick.png").convert()
+        self.brick = pygame.image.load("assets/brick.png").convert()
         brickrect = self.brick.get_rect()
         self.bricklength = brickrect.right - brickrect.left       
         self.brickheight = brickrect.bottom - brickrect.top             
