@@ -43,7 +43,7 @@ class BreakoutEnv(gym.Env):
     self.ballrect = self.ball.get_rect()
     
     self.soundCtrl = pygame.mixer.Sound('assets/blip.wav')
-    self.soundCtrl.set_volume(10)        
+    self.soundCtrl.set_volume(0)        
     
     self.wall = Wall()
     self.wall.build_wall(self.width)
@@ -55,9 +55,6 @@ class BreakoutEnv(gym.Env):
     self.xspeed = self.xspeed_init
     self.yspeed = self.yspeed_init
     self.lives = self.max_lives
-
-    #pygame.key.set_repeat(1,30)       
-    #pygame.mouse.set_visible(0)
 
     # Define action and observation space
     # They must be gym.spaces objects
@@ -86,7 +83,7 @@ class BreakoutEnv(gym.Env):
       self.batrect = self.batrect.move(self.bat_speed, 0)
       if (self.batrect.right > self.width):                            
           self.batrect.right = self.width
-    print("action now: " + str(action))
+    self.show_score()
 
     # check if bat has hit ball    
     if self.ballrect.bottom >= self.batrect.top and \
@@ -95,7 +92,8 @@ class BreakoutEnv(gym.Env):
         self.ballrect.left <= self.batrect.right:
         self.yspeed = -self.yspeed                
         self.soundCtrl.play(0)                
-        offset = self.ballrect.center[0] - self.batrect.center[0]                          
+        offset = self.ballrect.center[0] - self.batrect.center[0]   
+        self.score += 500 # reward +                   
         # offset > 0 means ball has hit RHS of bat                   
         # vary angle of ball depending on where ball hits bat                      
         if offset > 0:
@@ -119,12 +117,13 @@ class BreakoutEnv(gym.Env):
         self.xspeed = -self.xspeed                
         self.soundCtrl.play(0)            
     if self.ballrect.top < 0:
-        yspeed = -yspeed                
+        self.yspeed = -self.yspeed                
         self.soundCtrl.play(0)   
 
-    # check if ball has gone past bat - lose a life
+    # check if ball has gone past bat, lose a life
     if self.ballrect.top > self.height:
         self.lives -= 1
+        self.score -= 100 # reward -
         # start a new ball
         self.xspeed = self.xspeed_init          
         if random.random() > 0.5:
@@ -150,7 +149,7 @@ class BreakoutEnv(gym.Env):
             self.yspeed = -self.yspeed                
         self.soundCtrl.play(0)              
         self.wall.brickrect[index:index + 1] = []
-        self.score += 10
+        self.score += 100 # reward +
 
     # if wall completely gone then rebuild it
     if self.wall.brickrect == []:              
@@ -170,8 +169,6 @@ class BreakoutEnv(gym.Env):
       self.wall.build_wall(self.width)
       self.lives = self.max_lives
       self.score = 0
-      #self.batrect = self.batrect.move((self.width / 2) - (self.batrect.right / 2), self.height - 20)
-      #self.ballrect = self.ballrect.move(self.width / 2, self.height / 2) 
       return np.array([self.batrect.left, self.batrect.right, self.ballrect.left, self.ballrect.right], dtype=np.float32)
 
   def render(self, mode='human'):
@@ -200,7 +197,7 @@ class BreakoutEnv(gym.Env):
 if __name__=="__main__":
     env = BreakoutEnv()
     model = PPO('MlpPolicy', env, verbose=1)
-    model.learn(total_timesteps=100000)
+    model.learn(total_timesteps=100000) #100000
     obs = env.reset()
 
     for i in range(2000):
