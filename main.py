@@ -25,6 +25,7 @@ class BreakoutEnv(gym.Env):
     self.max_lives = 5
     self.bat_speed = 15
     self.score = 0 
+    self.reward = 0
     self.bgcolour = 0x2F, 0x4F, 0x4F  # darkslategrey        
     self.size = self.width, self.height = 640, 480
 
@@ -92,8 +93,7 @@ class BreakoutEnv(gym.Env):
         self.ballrect.left <= self.batrect.right:
         self.yspeed = -self.yspeed                
         self.soundCtrl.play(0)                
-        offset = self.ballrect.center[0] - self.batrect.center[0]   
-        self.score += 1 # reward +                   
+        offset = self.ballrect.center[0] - self.batrect.center[0]                   
         # offset > 0 means ball has hit RHS of bat                   
         # vary angle of ball depending on where ball hits bat                      
         if offset > 0:
@@ -123,7 +123,6 @@ class BreakoutEnv(gym.Env):
     # check if ball has gone past bat, lose a life
     if self.ballrect.top > self.height:
         self.lives -= 1
-        self.score -= 100 # reward -
         # start a new ball
         self.xspeed = self.xspeed_init          
         if random.random() > 0.5:
@@ -150,6 +149,7 @@ class BreakoutEnv(gym.Env):
         self.soundCtrl.play(0)              
         self.wall.brickrect[index:index + 1] = []
         self.score += 100 # reward +
+        self.reward = 100
 
     # if wall completely gone then rebuild it
     if self.wall.brickrect == []:              
@@ -162,11 +162,11 @@ class BreakoutEnv(gym.Env):
     dif_l = abs(self.ballrect.left - self.batrect.left)
     dif_r = abs(self.ballrect.right - self.batrect.right)    
     if dif_l < 50 or dif_r < 50:
-        self.score += 10
+        self.reward = 1
     else:
-        self.score -= 10
+        self.reward = -1
 
-    reward = self.score
+    reward = self.reward
     done = (self.lives == 0)
     info = {}
 
@@ -204,11 +204,14 @@ class BreakoutEnv(gym.Env):
 
 if __name__=="__main__":
     env = BreakoutEnv()
-    model = PPO('MlpPolicy', env, verbose=1)
-    model.learn(total_timesteps=100000) #100000
+    #model = PPO('MlpPolicy', env, verbose=1)
+    #model.learn(total_timesteps=100000) #100000
     obs = env.reset()
 
-    for i in range(2000):
+    #model.save("snake_ai_model")
+    model = PPO.load("snake_ai_model")
+
+    for i in range(4000):
         action, _state = model.predict(obs, deterministic=True)
         obs, reward, done, info = env.step(action)
         env.render()
