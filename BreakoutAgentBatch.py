@@ -86,9 +86,10 @@ if __name__=="__main__":
           if done:
             obs = env.reset()
 
-        with open("scores/score_" + timestamp + ".txt", "a") as file:
+        with open("scores/score_" + timestamp + ".csv", "a") as file:
           p1 = list_algs_names[i]
-          p2 = str(info["score"])
-          p3 = str(info["lives"])
-          p4 = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-          file.write(p1 + "," + p2 + "," + p3 + "," + p4 + "\n")
+          p2 = str(list_steps[j])
+          p3 = str(info["score"])
+          p4 = str(info["lives"])
+          p5 = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+          file.write(p1 + "," + p2 + "," + p3 + "," + p4 + "," + p5 + "\n")
