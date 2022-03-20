@@ -3,6 +3,7 @@ from stable_baselines3 import A2C
 from stable_baselines3 import DQN
 
 import gym
+from datetime import datetime
 import numpy as np
 from gym import spaces
 from BreakoutGame import BreakoutGame
@@ -63,12 +64,12 @@ if __name__=="__main__":
 
     list_algs = [PPO, A2C, DQN]
     list_algs_names = ["ppo", "a2c", "dqn"]
-    list_steps = [10000, 50000, 100000, 500000]
+    list_steps = [10000, 50000, 100000, 500000, 1000000]
     #list_steps = [1, 10, 50, 100]
-    filename = ""
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    for i in range(0,3):
-      for j in range(0,3):
+    for i in range(0, len(list_algs)):
+      for j in range(0, len(list_steps)):
         filename = "_" + list_algs_names[i] + "_" + str(list_steps[j])
 
         env = BreakoutAgent()
@@ -85,5 +86,9 @@ if __name__=="__main__":
           if done:
             obs = env.reset()
 
-        with open("scores/score_" + filename + ".txt", "w") as file:
-          file.write(str(info))
+        with open("scores/score_" + timestamp + ".txt", "a") as file:
+          p1 = list_algs_names[i]
+          p2 = str(info["score"])
+          p3 = str(info["lives"])
+          p4 = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+          file.write(p1 + "," + p2 + "," + p3 + "," + p4 + "\n")
