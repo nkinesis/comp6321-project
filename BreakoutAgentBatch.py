@@ -77,7 +77,7 @@ if __name__=="__main__":
         obs = env.reset()
         model.save("models/model" + filename)
 
-        for k in range(1):
+        for k in range(2000):
           action, _state = model.predict(obs, deterministic=True)
           obs, reward, done, info = env.step(action)
           env.render()
