@@ -9,7 +9,7 @@ from gym import spaces
 from BreakoutGame import BreakoutGame
 import GameObjects
 
-class BreakoutAgent(gym.Env):
+class BreakoutAgentBatch(gym.Env):
   """Custom Environment that follows gym interface"""
   metadata = {'render.modes': ['human']}
   
@@ -18,7 +18,7 @@ class BreakoutAgent(gym.Env):
   RIGHT = 1
 
   def __init__(self):
-    super(BreakoutAgent, self).__init__()
+    super(BreakoutAgentBatch, self).__init__()
     number_of_actions = 2
     number_of_observations = 4
     self.action_space = spaces.Discrete(number_of_actions)
@@ -41,9 +41,9 @@ class BreakoutAgent(gym.Env):
     dif_r = abs(ball.right - bat.right)    
 
     if ball.top > 200 and (dif_l < 50 or dif_r < 50):
-        reward = 1
+      reward = 1
     else:
-        reward = -1
+      reward = -1
 
     if self.observer.event.score - self.prevScore > 0:
       reward = 100
@@ -65,14 +65,16 @@ if __name__=="__main__":
     list_algs = [PPO, A2C, DQN]
     list_algs_names = ["ppo", "a2c", "dqn"]
     list_steps = [10000, 50000, 100000, 500000, 1000000]
-    #list_steps = [1, 10, 50, 100]
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
+    with open("scores/score_" + timestamp + ".csv", "a") as file:
+      file.write("algorithm,steps,score,lives,timestamp\n")
+    
     for i in range(0, len(list_algs)):
       for j in range(0, len(list_steps)):
         filename = "_" + list_algs_names[i] + "_" + str(list_steps[j])
 
-        env = BreakoutAgent()
+        env = BreakoutAgentBatch()
         model = list_algs[i]('MlpPolicy', env, verbose=1)
         model.learn(total_timesteps=list_steps[j]) 
         obs = env.reset()
@@ -84,7 +86,8 @@ if __name__=="__main__":
           env.render()
           print(info)
           if done:
-            obs = env.reset()
+            print("no more lives")
+            break
 
         with open("scores/score_" + timestamp + ".csv", "a") as file:
           p1 = list_algs_names[i]

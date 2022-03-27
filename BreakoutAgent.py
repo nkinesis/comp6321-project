@@ -30,16 +30,16 @@ class BreakoutAgent(gym.Env):
 
     reward = 0
     done = (self.observer.event.lives == 0)
-    info = {}
+    info = {"score": self.observer.event.score, "lives": self.observer.event.lives}
 
     ball = self.observer.event.ball.rect
     bat = self.observer.event.bat.rect
     dif_l = abs(ball.left - bat.left)
     dif_r = abs(ball.right - bat.right)    
     if dif_l < 50 or dif_r < 50:
-        reward = 1
+      reward = 1
     else:
-        reward = -1
+      reward = -1
 
     if self.observer.event.score - self.prevScore > 0:
       reward = 100
@@ -55,24 +55,3 @@ class BreakoutAgent(gym.Env):
 
   def render(self, mode='human'):
     self.game.render()
-
-if __name__=="__main__":
-
-    run_last_agent_trained = True
-    env = BreakoutAgent()
-
-    if run_last_agent_trained:
-      obs = env.reset()
-      model = PPO.load("breakout_model")
-    else:
-      model = PPO('MlpPolicy', env, verbose=1)
-      model.learn(total_timesteps=100000)
-      obs = env.reset()
-      model.save("breakout_model")
-
-    for i in range(4000):
-        action, _state = model.predict(obs, deterministic=True)
-        obs, reward, done, info = env.step(action)
-        env.render()
-        if done:
-            obs = env.reset()

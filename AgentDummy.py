@@ -1,5 +1,5 @@
 from datetime import datetime
-from BreakoutAgentBatch import BreakoutAgent
+from BreakoutAgent import BreakoutAgent
 
 env = BreakoutAgent()
 episodes = 2000
