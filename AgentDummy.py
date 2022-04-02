@@ -4,7 +4,7 @@ from BreakoutAgent import BreakoutAgent
 env = BreakoutAgent()
 episodes = 2000
 results = []
-for i in range(0, 10):
+for i in range(0, 60):
     obs = env.reset()
     for episode in range(episodes):
         random_action = env.action_space.sample()
