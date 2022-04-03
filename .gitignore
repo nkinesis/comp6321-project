@@ -2,3 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
+.ipynb_checkpoints
+
+# Trained models and score data
+/models
+/scores

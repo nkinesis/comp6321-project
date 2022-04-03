@@ -1,5 +1,7 @@
 import sys, pygame
 import GameObjects
+import random
+import time
 
 class BreakoutGame():
 
@@ -53,7 +55,7 @@ class BreakoutGame():
         self.bat = GameObjects.Bat()
         self.ball = GameObjects.Ball()
         self.bat.rect = self.bat.rect.move((self.width / 2) - (self.bat.rect.right / 2), self.height - 20)
-        self.ball.rect = self.ball.rect.move(self.width / 2, self.height / 2)
+        self.ball.rect = self.ball.rect.move((self.width / 2) + random.randint(-200, 200), self.height / 2)
 
     def runLogic(self, comm):
         self.checkAgentCommands(comm)
@@ -116,12 +118,12 @@ class BreakoutGame():
             self.lives -= 1    
             self.ball_xspeed = GameObjects.BALL_XSPEED
             self.ball_yspeed = GameObjects.BALL_YSPEED            
-            self.ball.rect.center = self.width / 2, self.height / 3  
+            self.ball.rect.center = self.width / 2 + random.randint(-200, 200), self.height / 3  
 
         if self.lives == 0:    
             event = GameObjects.Event(self.score, self.lives, self.bat, self.ball)
             self.notify(event)
-            self.initGame() #restart game
+            #self.initGame() #restart game
 
     def checkIfBallOutOfBounds(self):
         if self.ball_xspeed < 0 and self.ball.rect.left < 0:
