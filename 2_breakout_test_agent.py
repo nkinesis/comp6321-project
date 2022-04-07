@@ -5,6 +5,7 @@ from stable_baselines3 import A2C
 from stable_baselines3 import DQN
 from breakout_agent import BreakoutAgent
 
+n_sessions = 1
 list_algs = [PPO, A2C, DQN]
 list_algs_names = ["ppo", "a2c", "dqn"]
 list_steps = [10000, 50000, 100000, 500000, 1000000]
@@ -28,7 +29,7 @@ for i in range(0, len(list_algs_names)):
     model = list_algs[i].load("training/" + model_name + ".zip")
     print("now:" + model_name)
     time.sleep(1)
-    for k in range(0, 10):
+    for k in range(0, n_sessions):
       obs = env.reset()
       for l in range(2000):
         action, _state = model.predict(obs, deterministic=True)

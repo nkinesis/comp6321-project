@@ -7,7 +7,7 @@ MAX_LIVES=5
 BG_COLOR = 0x2F, 0x4F, 0x4F 
 
 def loadGameObj(name):
-    return pygame.image.load("assets/%s.png" % name).convert().get_rect()
+    return pygame.image.load("game/assets/%s.png" % name).convert().get_rect()
 
 def drawScore(text, width):
     scoretext = pygame.font.Font(None,40).render(str(text), True, (0,255,255), BG_COLOR)
@@ -17,7 +17,7 @@ def drawScore(text, width):
 
 class Ball():
     def __init__(self):
-        self.sprite = pygame.image.load("assets/ball.png").convert()
+        self.sprite = pygame.image.load("game/assets/ball.png").convert()
         self.rect = self.sprite.get_rect()
 
     def move(self, x, y):
@@ -28,7 +28,7 @@ class Ball():
 
 class Bat():
     def __init__(self):
-        self.sprite = pygame.image.load("assets/bat.png").convert()
+        self.sprite = pygame.image.load("game/assets/bat.png").convert()
         self.rect = self.sprite.get_rect()
 
     def move(self, x, y):
@@ -37,7 +37,7 @@ class Bat():
 class Wall():
     
     def __init__(self):
-        self.brick = pygame.image.load("assets/brick.png").convert()
+        self.brick = pygame.image.load("game/assets/brick.png").convert()
         brickrect = self.brick.get_rect()
         self.bricklength = brickrect.right - brickrect.left       
         self.brickheight = brickrect.bottom - brickrect.top             

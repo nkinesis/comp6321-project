@@ -11,6 +11,11 @@ timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 results_path = "testing/results"
 results_filename = "score_" + timestamp + ".csv"
 
+# todo
+list_algs = [PPO]
+list_algs_names = ["ppo"]
+list_steps = [10000]
+
 with open(results_path + "/" + results_filename, "a") as file:
   file.write("algorithm,steps,score,lives,timestamp\n")
 

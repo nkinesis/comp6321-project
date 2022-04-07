@@ -1,6 +1,6 @@
 import random
 import sys, pygame
-import breakout_objects 
+import game.breakout_objects as breakout_objects
 
 class BreakoutGame():
 
@@ -27,10 +27,8 @@ class BreakoutGame():
         self.size = self.width, self.height = 640, 480
         self.gameScreen = None
         self.gameClock = None
-        self.gameSound = None
 
         self.initGraphics()
-        self.initSound()
         self.initObjects()
         event = breakout_objects.Event(self.score, self.lives, self.bat, self.ball)
         self.notify(event)
@@ -40,10 +38,6 @@ class BreakoutGame():
         self.gameScreen = pygame.display.set_mode(self.size)
         self.gameClock = pygame.time.Clock()
         pygame.mouse.set_visible(0) 
-
-    def initSound(self):
-        self.gameSound = pygame.mixer.Sound('assets/blip.wav')
-        self.gameSound.set_volume(0) #original: 10   
 
     def initObjects(self):
         # wall
@@ -79,8 +73,7 @@ class BreakoutGame():
                       
     def checkCollision(self):
         if self.ball.isCollided(self.bat.rect):
-            self.ball_yspeed = -self.ball_yspeed                
-            self.gameSound.play(0)                
+            self.ball_yspeed = -self.ball_yspeed                            
             offset = self.ball.rect.center[0] - self.bat.rect.center[0]                          
             # offset > 0 means ball has hit RHS of bat                   
             # vary angle of ball depending on where ball hits bat                      
@@ -104,11 +97,9 @@ class BreakoutGame():
         self.ball.rect = self.ball.rect.move(self.ball_xspeed, self.ball_yspeed)
 
         if self.ball.rect.left < 0 or self.ball.rect.right > self.width:
-            self.ball_xspeed = -self.ball_xspeed                
-            self.gameSound.play(0)            
+            self.ball_xspeed = -self.ball_xspeed                         
         if self.ball.rect.top < 0:
-            self.ball_yspeed = -self.ball_yspeed                
-            self.gameSound.play(0)        
+            self.ball_yspeed = -self.ball_yspeed                   
 
     def checkLosingCondition(self):
         # if ball is below screen height, lose 1 life
@@ -127,11 +118,9 @@ class BreakoutGame():
     def checkIfBallOutOfBounds(self):
         if self.ball_xspeed < 0 and self.ball.rect.left < 0:
             self.ball_xspeed = -self.ball_xspeed                                
-            self.gameSound.play(0)
 
         if self.ball_xspeed > 0 and self.ball.rect.right > self.width:
             self.ball_xspeed = -self.ball_xspeed                               
-            self.gameSound.play(0)
 
     def checkBallHitWall(self):
         index = self.ball.rect.collidelist(self.wall.brickrect)       
@@ -140,8 +129,7 @@ class BreakoutGame():
                 self.ball.rect.center[0] < self.wall.brickrect[index].left:
                 self.ball_xspeed = -self.ball_xspeed
             else:
-                self.ball_yspeed = -self.ball_yspeed                
-            self.gameSound.play(0)              
+                self.ball_yspeed = -self.ball_yspeed                         
             self.wall.brickrect[index:index + 1] = []
             self.score += 10
         

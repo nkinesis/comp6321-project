@@ -3,8 +3,8 @@ from stable_baselines3 import PPO
 import gym
 import numpy as np
 from gym import spaces
-from BreakoutGame import BreakoutGame
-import GameObjects
+from game.breakout_game import BreakoutGame
+import game.breakout_objects as BreakoutObjects
 
 class BreakoutAgent(gym.Env):
   """Custom Environment that follows gym interface"""
@@ -21,7 +21,7 @@ class BreakoutAgent(gym.Env):
     self.action_space = spaces.Discrete(number_of_actions)
     self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(number_of_observations,), dtype=np.float32)
     self.game = BreakoutGame()
-    self.observer = GameObjects.Observer()
+    self.observer = BreakoutObjects.Observer()
     self.prevScore = 0
     self.game.attach(self.observer)
 
