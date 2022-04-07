@@ -1,30 +1,29 @@
-import sys, pygame
-import GameObjects
 import random
-import time
+import sys, pygame
+import breakout_objects 
 
 class BreakoutGame():
 
     def __init__(self):
         self._observers = []
 
-    def attach(self, observer: GameObjects.Observer) -> None:
+    def attach(self, observer: breakout_objects.Observer) -> None:
         self._observers.append(observer)
 
-    def detach(self,observer: GameObjects.Observer) -> None:
+    def detach(self,observer: breakout_objects.Observer) -> None:
         self._observers.remove(observer)
 
-    def notify(self, event: GameObjects.Event) -> None:
+    def notify(self, event: breakout_objects.Event) -> None:
         for observer in self._observers:
             observer.update(event)
 
     def initGame(self):
         self.score = 0  
         self.wall = None
-        self.ball_xspeed = GameObjects.BALL_XSPEED
-        self.ball_yspeed = GameObjects.BALL_YSPEED
-        self.lives = GameObjects.MAX_LIVES
-        self.bat_speed = GameObjects.BAT_XSPEED
+        self.ball_xspeed = breakout_objects.BALL_XSPEED
+        self.ball_yspeed = breakout_objects.BALL_YSPEED
+        self.lives = breakout_objects.MAX_LIVES
+        self.bat_speed = breakout_objects.BAT_XSPEED
         self.size = self.width, self.height = 640, 480
         self.gameScreen = None
         self.gameClock = None
@@ -33,7 +32,7 @@ class BreakoutGame():
         self.initGraphics()
         self.initSound()
         self.initObjects()
-        event = GameObjects.Event(self.score, self.lives, self.bat, self.ball)
+        event = breakout_objects.Event(self.score, self.lives, self.bat, self.ball)
         self.notify(event)
 
     def initGraphics(self):
@@ -48,12 +47,12 @@ class BreakoutGame():
 
     def initObjects(self):
         # wall
-        self.wall = GameObjects.Wall()
+        self.wall = breakout_objects.Wall()
         self.wall.build_wall(self.width)
 
         # bat and ball
-        self.bat = GameObjects.Bat()
-        self.ball = GameObjects.Ball()
+        self.bat = breakout_objects.Bat()
+        self.ball = breakout_objects.Ball()
         self.bat.rect = self.bat.rect.move((self.width / 2) - (self.bat.rect.right / 2), self.height - 20)
         self.ball.rect = self.ball.rect.move((self.width / 2) + random.randint(-200, 200), self.height / 2)
 
@@ -65,7 +64,7 @@ class BreakoutGame():
         self.checkIfBallOutOfBounds()  
         self.checkBallHitWall()    
         self.checkHumanQuit() 
-        event = GameObjects.Event(self.score, self.lives, self.bat, self.ball)
+        event = breakout_objects.Event(self.score, self.lives, self.bat, self.ball)
         self.notify(event)
 
     def checkAgentCommands(self, comm):
@@ -116,12 +115,12 @@ class BreakoutGame():
         # put a new ball into the game
         if self.ball.rect.top > self.height:
             self.lives -= 1    
-            self.ball_xspeed = GameObjects.BALL_XSPEED
-            self.ball_yspeed = GameObjects.BALL_YSPEED            
+            self.ball_xspeed = breakout_objects.BALL_XSPEED
+            self.ball_yspeed = breakout_objects.BALL_YSPEED            
             self.ball.rect.center = self.width / 2 + random.randint(-200, 200), self.height / 3  
 
         if self.lives == 0:    
-            event = GameObjects.Event(self.score, self.lives, self.bat, self.ball)
+            event = breakout_objects.Event(self.score, self.lives, self.bat, self.ball)
             self.notify(event)
             #self.initGame() #restart game
 
@@ -149,8 +148,8 @@ class BreakoutGame():
     def render(self):
         self.gameClock.tick(60)
 
-        self.gameScreen.fill(GameObjects.BG_COLOR)
-        scoretext, scoretextrect = GameObjects.drawScore(self.score, self.width)
+        self.gameScreen.fill(breakout_objects.BG_COLOR)
+        scoretext, scoretextrect = breakout_objects.drawScore(self.score, self.width)
         self.gameScreen.blit(scoretext, scoretextrect)
 
         for i in range(0, len(self.wall.brickrect)):
@@ -159,8 +158,8 @@ class BreakoutGame():
         # if wall completely gone then rebuild it
         if self.wall.brickrect == []:              
             self.wall.build_wall(self.width)                
-            self.ball_xspeed = GameObjects.BALL_XSPEED
-            self.ball_yspeed = GameObjects.BALL_YSPEED              
+            self.ball_xspeed = breakout_objects.BALL_XSPEED
+            self.ball_yspeed = breakout_objects.BALL_YSPEED              
             self.ball.rect.center = self.width / 2, self.height / 3
         
         self.gameScreen.blit(self.ball.sprite, self.ball.rect)
