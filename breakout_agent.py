@@ -7,12 +7,6 @@ from game.breakout_game import BreakoutGame
 import game.breakout_objects as BreakoutObjects
 
 class BreakoutAgent(gym.Env):
-  """Custom Environment that follows gym interface"""
-  metadata = {'render.modes': ['human']}
-  
-  # Action Constants
-  LEFT = 0
-  RIGHT = 1
 
   def __init__(self):
     super(BreakoutAgent, self).__init__()
@@ -26,7 +20,7 @@ class BreakoutAgent(gym.Env):
     self.game.attach(self.observer)
 
   def step(self, action):
-    self.game.runLogic(action)
+    self.game.run_logic(action)
 
     reward = 0
     done = (self.observer.event.lives == 0)
@@ -48,10 +42,10 @@ class BreakoutAgent(gym.Env):
     return np.array([ball.left, ball.right, bat.left, bat.right], dtype=np.float32), reward, done, info
 
   def reset(self):
-    self.game.initGame()
+    self.game.init_game()
     ball = self.observer.event.ball.rect
     bat = self.observer.event.bat.rect
     return np.array([ball.left, ball.right, bat.left, bat.right], dtype=np.float32)
 
-  def render(self, mode='human'):
+  def render(self):
     self.game.render()

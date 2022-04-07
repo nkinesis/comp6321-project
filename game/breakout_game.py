@@ -17,7 +17,7 @@ class BreakoutGame():
         for observer in self._observers:
             observer.update(event)
 
-    def initGame(self):
+    def init_game(self):
         self.score = 0  
         self.wall = None
         self.ball_xspeed = breakout_objects.BALL_XSPEED
@@ -28,18 +28,18 @@ class BreakoutGame():
         self.gameScreen = None
         self.gameClock = None
 
-        self.initGraphics()
-        self.initObjects()
+        self.init_graphics()
+        self.init_objects()
         event = breakout_objects.Event(self.score, self.lives, self.bat, self.ball)
         self.notify(event)
 
-    def initGraphics(self):
+    def init_graphics(self):
         pygame.init()  
         self.gameScreen = pygame.display.set_mode(self.size)
         self.gameClock = pygame.time.Clock()
         pygame.mouse.set_visible(0) 
 
-    def initObjects(self):
+    def init_objects(self):
         # wall
         self.wall = breakout_objects.Wall()
         self.wall.build_wall(self.width)
@@ -50,18 +50,18 @@ class BreakoutGame():
         self.bat.rect = self.bat.rect.move((self.width / 2) - (self.bat.rect.right / 2), self.height - 20)
         self.ball.rect = self.ball.rect.move((self.width / 2) + random.randint(-200, 200), self.height / 2)
 
-    def runLogic(self, comm):
-        self.checkAgentCommands(comm)
-        self.checkCollision()  
-        self.moveBall()  
-        self.checkLosingCondition()  
-        self.checkIfBallOutOfBounds()  
-        self.checkBallHitWall()    
-        self.checkHumanQuit() 
+    def run_logic(self, comm):
+        self.check_agent_commands(comm)
+        self.check_collision()  
+        self.move_ball()  
+        self.check_game_over_condition()  
+        self.check_ball_collision_bounds()  
+        self.check_ball_hit_wall()    
+        self.check_quit_command() 
         event = breakout_objects.Event(self.score, self.lives, self.bat, self.ball)
         self.notify(event)
 
-    def checkAgentCommands(self, comm):
+    def check_agent_commands(self, comm):
         if comm == 0:                        
             self.bat.rect = self.bat.rect.move(-self.bat_speed, 0)     
             if (self.bat.rect.left < 0):                           
@@ -71,8 +71,8 @@ class BreakoutGame():
             if (self.bat.rect.right > self.width):                            
                 self.bat.rect.right = self.width
                       
-    def checkCollision(self):
-        if self.ball.isCollided(self.bat.rect):
+    def check_collision(self):
+        if self.ball.is_collided(self.bat.rect):
             self.ball_yspeed = -self.ball_yspeed                            
             offset = self.ball.rect.center[0] - self.bat.rect.center[0]                          
             # offset > 0 means ball has hit RHS of bat                   
@@ -92,7 +92,7 @@ class BreakoutGame():
                 elif self.ball_xspeed < -17:
                     self.ball_xspeed = -5    
 
-    def moveBall(self):
+    def move_ball(self):
         # move and limit movement in the edges of the screen
         self.ball.rect = self.ball.rect.move(self.ball_xspeed, self.ball_yspeed)
 
@@ -101,7 +101,7 @@ class BreakoutGame():
         if self.ball.rect.top < 0:
             self.ball_yspeed = -self.ball_yspeed                   
 
-    def checkLosingCondition(self):
+    def check_game_over_condition(self):
         # if ball is below screen height, lose 1 life
         # put a new ball into the game
         if self.ball.rect.top > self.height:
@@ -115,14 +115,14 @@ class BreakoutGame():
             self.notify(event)
             #self.initGame() #restart game
 
-    def checkIfBallOutOfBounds(self):
+    def check_ball_collision_bounds(self):
         if self.ball_xspeed < 0 and self.ball.rect.left < 0:
             self.ball_xspeed = -self.ball_xspeed                                
 
         if self.ball_xspeed > 0 and self.ball.rect.right > self.width:
             self.ball_xspeed = -self.ball_xspeed                               
 
-    def checkBallHitWall(self):
+    def check_ball_hit_wall(self):
         index = self.ball.rect.collidelist(self.wall.brickrect)       
         if index != -1: 
             if self.ball.rect.center[0] > self.wall.brickrect[index].right or \
@@ -137,7 +137,7 @@ class BreakoutGame():
         self.gameClock.tick(60)
 
         self.gameScreen.fill(breakout_objects.BG_COLOR)
-        scoretext, scoretextrect = breakout_objects.drawScore(self.score, self.width)
+        scoretext, scoretextrect = breakout_objects.draw_score_value(self.score, self.width)
         self.gameScreen.blit(scoretext, scoretextrect)
 
         for i in range(0, len(self.wall.brickrect)):
@@ -154,7 +154,7 @@ class BreakoutGame():
         self.gameScreen.blit(self.bat.sprite, self.bat.rect)
         pygame.display.flip()
 
-    def checkHumanQuit(self):
+    def check_quit_command(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -163,9 +163,9 @@ class BreakoutGame():
                     sys.exit()
     
     def main(self):
-        self.initGame()
+        self.init_game()
         while True:
-            self.runLogic(0)
+            self.run_logic(0)
             self.render()
 
 

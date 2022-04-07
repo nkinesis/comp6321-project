@@ -6,10 +6,10 @@ BAT_XSPEED=15
 MAX_LIVES=5
 BG_COLOR = 0x2F, 0x4F, 0x4F 
 
-def loadGameObj(name):
+def load_game_obj(name):
     return pygame.image.load("game/assets/%s.png" % name).convert().get_rect()
 
-def drawScore(text, width):
+def draw_score_value(text, width):
     scoretext = pygame.font.Font(None,40).render(str(text), True, (0,255,255), BG_COLOR)
     scoretextrect = scoretext.get_rect()
     scoretextrect = scoretextrect.move(width - scoretextrect.right, 0)
@@ -23,7 +23,7 @@ class Ball():
     def move(self, x, y):
         self.rect.move(x, y)
 
-    def isCollided(self, rect):
+    def is_collided(self, rect):
         return self.rect.bottom >= rect.top and self.rect.bottom <= rect.bottom and self.rect.right >= rect.left and self.rect.left <= rect.right
 
 class Bat():
