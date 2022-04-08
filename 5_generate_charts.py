@@ -2,15 +2,24 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-c1 = "#ee442f"
-c2 = "#601a4a"
-c3 = "#63acbe"
+""" All functions were written by Gabriel C. Ullmann, unless otherwise noted.
+Algorithms, steps and rewards used in the tests"""
 alg_values = ["ppo", "a2c", "dqn"]
 step_values = ["10000", "50000", "100000", "500000", "1000000"]
 rew_values = ["break-and-follow", "break", "follow"]
+
+""" Colors used in the charts"""
+c1 = "#ee442f"
+c2 = "#601a4a"
+c3 = "#63acbe"
+c4 = "#000000"
+
+""" Path to file with aggregated results across all rounds """
 base_path = "testing/rounds/"
 ds_all = pd.read_csv(base_path + "all.csv", sep=",")
 
+""" Averages for all combination of reward, algorithm, steps
+Generated using script 4_compute_avg_scores.py """
 ds_bf = {
     'ppo': {
         'scores': [108.72, 99.92, 120.25, 104.17, 134.33],
@@ -54,37 +63,64 @@ ds_f = {
     }
 }
 
+""" Convert string array to uppercase
 
+    Arguments
+    ---------
+    arr : array
+        Array of strings
+"""
 def to_uppercase(arr):
     res = []
     for item in arr:
         res.append(item.upper())
     return res
 
+""" Filter 'all rounds' dataset by reward scenario. 
+If no reward informed, return full dataset.
 
-def get_dataset(r=None):
-    if r == None:
+    Arguments
+    ---------
+    reward : string
+        Name of the reward scenario (e.g. break-and-follow).
+"""
+def get_ds_all_rounds(reward=None):
+    if reward == None:
         return ds_all
     else:
-        return ds_all[(ds_all.reward == r)]
+        return ds_all[(ds_all.reward == reward)]
 
+"""  Get dataset of averages related to a reward scenario. 
 
-def get_color(a):
-    if a == "ppo":
-        return c1
-    elif a == "a2c":
-        return c2
-    return c3
-
-
-def get_dataset_by_reward(a):
-    if a == "break-and-follow":
+    Arguments
+    ---------
+    reward : string
+        Name of the reward scenario (e.g. break-and-follow).
+"""
+def get_ds_by_reward(reward):
+    if reward == "break-and-follow":
         return ds_bf
-    elif a == "break":
+    elif reward == "break":
         return ds_b
     return ds_f
 
+""" Get color related to a given algorithm in the charts.
 
+    Arguments
+    ---------
+    alg : string
+        Name of the algorithm (e.g. ppo)
+"""
+def get_color(alg):
+    if alg == "ppo" or alg == "PPO":
+        return c1
+    elif alg == "a2c" or alg == "A2C":
+        return c2
+    elif alg == "dqn" or alg == "DQN":
+        return c3
+    return c4
+
+""" Generate line chart comparing score/live average by reward vs. algorithms vs. steps """
 def generate_comparison_line():
     var_values = ["scores", "lives"]
     alg_values = ["ppo", "a2c", "dqn"]
@@ -95,7 +131,7 @@ def generate_comparison_line():
     for v in var_values:
         for r in rew_values:
             for a in alg_values:
-                d = get_dataset_by_reward(r)
+                d = get_ds_by_reward(r)
                 plt.subplot(2, 3, count)
                 plt.plot(step_values, d[a][v],
                          color=get_color(a), label=a.upper())
@@ -110,12 +146,12 @@ def generate_comparison_line():
     plt.savefig(
         "docs/img/all_combinations.pdf")
 
-
+""" Generate bar chart comparing score/live average by reward vs. algorithms vs. steps """
 def generate_comparison_bars():
     scs = []
     lvs = []
     for r in rew_values:
-        ds = get_dataset(r)
+        ds = get_ds_all_rounds(r)
         scs.append(ds["score"].mean())
         lvs.append(ds["lives"].mean())
     plt.figure(figsize=(12, 6))
@@ -137,7 +173,7 @@ def generate_comparison_bars():
     scs = []
     lvs = []
     for a in alg_values:
-        ds = get_dataset()
+        ds = get_ds_all_rounds()
         ds = ds[(ds.algorithm.str.contains(a))]
         scs.append(ds["score"].mean())
         lvs.append(ds["lives"].mean())
@@ -159,7 +195,7 @@ def generate_comparison_bars():
     scs = []
     lvs = []
     for st in step_values:
-        ds = get_dataset()
+        ds = get_ds_all_rounds()
         ds = ds[(ds.algorithm.str.contains("_" + str(st)))]
         scs.append(ds["score"].mean())
         lvs.append(ds["lives"].mean())
@@ -180,11 +216,11 @@ def generate_comparison_bars():
     plt.ylim(0, 4)
     plt.savefig("img/all_avgs.pdf")
 
-
+""" Generate table with combination of top scores/lives"""
 def generate_top_scores_table():
-    ds = get_dataset()
+    ds = get_ds_all_rounds()
     tops = ds[(ds.score > 260) & (ds.lives >= 4)]
-    print(tops.sort_values('score', ascending=False))
+    return tops.sort_values('score', ascending=False)
 
 if __name__ == "__main__":
     generate_comparison_line()

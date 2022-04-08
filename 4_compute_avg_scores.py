@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 """ All functions were written by Gabriel C. Ullmann, unless otherwise noted.
-Alogrithms, steps and rewards used in the tests"""
+Algorithms, steps and rewards used in the tests"""
 alg_values = ["ppo", "a2c", "dqn"]
 step_values = ["10000", "50000", "100000", "500000", "1000000"]
 rew_values = ["break-and-follow", "break", "follow"]
