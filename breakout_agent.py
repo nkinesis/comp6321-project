@@ -7,6 +7,9 @@ from game.breakout_game import BreakoutGame
 import game.breakout_objects as BreakoutObjects
 
 """ All functions were written by Gabriel C. Ullmann, unless otherwise noted.
+Based on code from Mustafa Abushark (2021).
+Source: https://github.com/laserany/snake-ai-model/blob/main/main.py
+
 OpenAI Gym environment for playing the Breakout game"""
 class BreakoutAgent(gym.Env):
 
@@ -33,12 +36,12 @@ class BreakoutAgent(gym.Env):
   def step(self, action):
     self.game.run_logic(action)
 
+    # default reward is zero
     reward = 0
     done = (self.observer.event.lives == 0)
     info = {"score": self.observer.event.score, "lives": self.observer.event.lives}
 
-    # if the bat is near the ball, give positive reward
-    # otherwise, give negative reward 
+    # reward 1: follow the ball
     ball = self.observer.event.ball.rect
     bat = self.observer.event.bat.rect
     dif_l = abs(ball.left - bat.left)
@@ -48,7 +51,7 @@ class BreakoutAgent(gym.Env):
     else:
       reward = -1
 
-    # if the score increases, give positive reward
+    # reward 2: break blocks to increase the score
     if self.observer.event.score - self.prevScore > 0:
       reward = 100
 
@@ -65,3 +68,4 @@ class BreakoutAgent(gym.Env):
   """ Draw game on the screen. """
   def render(self):
     self.game.render()
+    return self.game.gameScreen

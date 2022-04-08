@@ -29,6 +29,7 @@ width : int
     Position X of the text on the screen. Position Y is always 0 (top of the screen).
 """
 def draw_text(text, x_pos):
+    text = str(text)
     text = (text[:20] + '...') if len(text) > 20 else text
     scoretext = pygame.font.Font(None,40).render(str(text), True, (0,255,255), BG_COLOR)
     scoretextrect = scoretext.get_rect()
