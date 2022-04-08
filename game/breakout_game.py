@@ -46,7 +46,10 @@ class BreakoutGame():
         self.gameClock = pygame.time.Clock()
         pygame.mouse.set_visible(0) 
 
-    """Create instances of the game objects: bat, ball and walls."""
+    """Create instances of the game objects: bat, ball and walls.
+    
+    Author: John Cheetham, 2009 
+    """
     def init_objects(self):
         self.wall = breakout_objects.Wall()
         self.wall.build_wall(self.width)
@@ -74,6 +77,8 @@ class BreakoutGame():
         self.notify(event)
 
     """Check the inputs given by the agent and move the bat accordingly
+
+    Author: John Cheetham, 2009 
 
     Arguments
     ---------

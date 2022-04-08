@@ -5,10 +5,9 @@ import matplotlib.pyplot as plt
 """ All functions were written by Gabriel C. Ullmann, unless otherwise noted.
 Algorithms, steps and rewards used in the tests"""
 alg_values = ["ppo", "a2c", "dqn"]
-step_values = ["10000", "50000", "100000", "500000", "1000000"]
 rew_values = ["break-and-follow", "break", "follow"]
 
-""" Colors used in the charts"""
+""" Colors used in the plots"""
 c1 = "#ee442f"
 c2 = "#601a4a"
 c3 = "#63acbe"
@@ -104,7 +103,7 @@ def get_ds_by_reward(reward):
         return ds_b
     return ds_f
 
-""" Get color related to a given algorithm in the charts.
+""" Get color related to a given algorithm in the plots.
 
     Arguments
     ---------
@@ -120,13 +119,40 @@ def get_color(alg):
         return c3
     return c4
 
-""" Generate line chart comparing score/live average by reward vs. algorithms vs. steps """
+""" Draw matplotlib bar plot
+
+    Arguments
+    ---------
+    order : int
+        Order of appearance of the subplot inside the bigger plot. Ranges from 1 to 6.
+    arr_params : array
+        List of parameters, X-axis of the plot.
+    arr_avgs : array
+        List of score/live averages, Y-axis of the plot.
+    title : string
+        Plot title.        
+    y_label : string
+        Label of the Y-axis (score/lives).    
+    y_max : float
+        Maximum value to be displayed in the Y-axis. Used to adjust the height of the plot. 
+"""
+def draw_bar_plot(order, arr_params, arr_avgs, title, y_label, y_max):
+    plt.subplot(2, 3, order)
+    if "ppo" in arr_params:
+        plot = plt.bar(to_uppercase(arr_params), arr_avgs, color=[c1, c2, c3])
+    else:
+        plot = plt.bar(arr_params, arr_avgs, color=[c3])
+    plt.bar_label(plot, np.around(arr_avgs, 2))
+    plt.ylabel(y_label)
+    plt.title("(%s) %s, %s" % (chr(order + 96), title, y_label))
+    plt.ylim(0, y_max)
+    plt.tight_layout()
+
+""" Generate line plot comparing score/live average by reward vs. algorithms vs. steps """
 def generate_comparison_line():
-    var_values = ["scores", "lives"]
-    alg_values = ["ppo", "a2c", "dqn"]
-    step_values = ["10K", "50K", "100K", "500K", "1M"]
-    rew_values = ["break-and-follow", "break", "follow"]
     count = 1
+    var_values = ["scores", "lives"]
+    step_values = ["10K", "50K", "100K", "500K", "1M"]
     plt.figure(figsize=(12, 6))
     for v in var_values:
         for r in rew_values:
@@ -143,85 +169,52 @@ def generate_comparison_line():
                 plt.tight_layout()
             count += 1
 
-    plt.savefig(
-        "docs/img/all_combinations.pdf")
+    plt.savefig("docs/img/all_combinations.pdf")
 
-""" Generate bar chart comparing score/live average by reward vs. algorithms vs. steps """
+""" Generate bar plot comparing score/live average by reward vs. algorithms vs. steps """
 def generate_comparison_bars():
-    scs = []
-    lvs = []
-    for r in rew_values:
-        ds = get_ds_all_rounds(r)
-        scs.append(ds["score"].mean())
-        lvs.append(ds["lives"].mean())
+    step_values = ["10000", "50000", "100000", "500000", "1000000"]
+    list_params = [rew_values, alg_values, step_values]
+    list_params_names = ["rewards", "algorithm", "steps"]
     plt.figure(figsize=(12, 6))
-    plt.subplot(2, 3, 1)
-    b1 = plt.bar(rew_values, scs, color=[c3])
-    plt.bar_label(b1, np.around(scs, 2))
-    plt.ylabel("score")
-    plt.title('(a) rewards, score')
-    plt.ylim(0, 100)
+    index = 0
+    for param in list_params:
+        avgs_score = []
+        avgs_lives = []
+        for p in param:
+            if list_params_names[index] == "rewards":
+                ds = get_ds_all_rounds(p)
+            elif list_params_names[index] == "algorithm":
+                ds = get_ds_all_rounds()
+                ds = ds[(ds.algorithm.str.contains(p))]
+            else:
+                ds = get_ds_all_rounds()
+                ds = ds[(ds.algorithm.str.contains("_" + str(p)))]
+            avgs_score.append(ds["score"].mean())
+            avgs_lives.append(ds["lives"].mean())
+        draw_bar_plot(index + 1, param, avgs_score, list_params_names[index], "score", 100)
+        draw_bar_plot(index + 4, param, avgs_lives, list_params_names[index], "lives", 4)
+        index += 1
+    
+    plt.savefig("docs/img/all_avgs.pdf")
 
-    plt.subplot(2, 3, 4)
-    b1 = plt.bar(rew_values, lvs, color=[c3])
-    plt.bar_label(b1, np.around(lvs, 2))
-    plt.ylabel("lives")
-    plt.title('(d) rewards, lives')
-    plt.ylim(0, 4)
+""" Generate table with combination of top scores/lives
 
-    ####
-    scs = []
-    lvs = []
-    for a in alg_values:
-        ds = get_ds_all_rounds()
-        ds = ds[(ds.algorithm.str.contains(a))]
-        scs.append(ds["score"].mean())
-        lvs.append(ds["lives"].mean())
-    plt.subplot(2, 3, 2)
-    b1 = plt.bar(to_uppercase(alg_values), scs, color=[c1, c2, c3])
-    plt.bar_label(b1, np.around(scs, 2))
-    plt.ylabel("score")
-    plt.title('(b) algorithm, score')
-    plt.ylim(0, 100)
+    Arguments
+    ---------
+    min_score : int
+        Filter by scores greater than this
 
-    plt.subplot(2, 3, 5)
-    b1 = plt.bar(to_uppercase(alg_values), lvs, color=[c1, c2, c3])
-    plt.bar_label(b1, np.around(lvs, 2))
-    plt.ylabel("lives")
-    plt.title('(e) algorithm, lives')
-    plt.ylim(0, 4)
-
-    ####
-    scs = []
-    lvs = []
-    for st in step_values:
-        ds = get_ds_all_rounds()
-        ds = ds[(ds.algorithm.str.contains("_" + str(st)))]
-        scs.append(ds["score"].mean())
-        lvs.append(ds["lives"].mean())
-    plt.subplot(2, 3, 3)
-    b1 = plt.bar(step_values, scs, color=[c3])
-    plt.bar_label(b1, np.around(scs, 2))
-    plt.title("Average by # steps")
-    plt.ylabel("score")
-    plt.title('(c) steps, score')
-    plt.ylim(0, 100)
-
-    plt.subplot(2, 3, 6)
-    b1 = plt.bar(step_values, lvs, color=[c3])
-    plt.bar_label(b1, np.around(lvs, 2))
-    plt.ylabel("lives")
-    plt.title('(f) steps, lives')
-    plt.tight_layout()
-    plt.ylim(0, 4)
-    plt.savefig("img/all_avgs.pdf")
-
-""" Generate table with combination of top scores/lives"""
-def generate_top_scores_table():
+    min_lives : int
+        Filter by number of lives greater than this
+"""
+def generate_top_scores_table(min_score=250, min_lives=3):
     ds = get_ds_all_rounds()
-    tops = ds[(ds.score > 260) & (ds.lives >= 4)]
-    return tops.sort_values('score', ascending=False)
+    tops = ds[(ds.score > min_score) & (ds.lives >= min_lives)]
+    tops = tops.sort_values('score', ascending=False)
+    tops.to_csv('docs/top_scores_table.csv', index=False)  
 
 if __name__ == "__main__":
     generate_comparison_line()
     generate_comparison_bars()
+    generate_top_scores_table()

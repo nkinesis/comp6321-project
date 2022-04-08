@@ -1,0 +1,13 @@
+algorithm,reward,steps,score,lives,timestamp
+model_a2c_10000,break-and-follow,4,390,5,2022-03-25 15:34:58
+model_a2c_50000,follow,1,360,5,2022-03-24 19:58:05
+model_dqn_1000000,break-and-follow,0,310,5,2022-03-29 13:15:54
+model_dqn_1000000,break-and-follow,5,290,5,2022-03-30 18:11:57
+model_ppo_50000,follow,8,280,5,2022-03-24 19:34:53
+model_ppo_100000,break-and-follow,5,280,5,2022-03-29 12:19:04
+model_ppo_500000,break-and-follow,4,280,5,2022-03-29 12:23:55
+model_ppo_1000000,break-and-follow,5,280,5,2022-03-30 17:23:44
+model_ppo_50000,follow,1,270,3,2022-03-24 19:31:08
+model_a2c_10000,follow,7,270,5,2022-03-27 18:45:10
+model_ppo_1000000,break-and-follow,9,270,5,2022-03-29 12:32:00
+model_ppo_50000,follow,9,260,4,2022-03-23 22:46:33
