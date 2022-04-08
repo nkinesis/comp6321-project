@@ -2,7 +2,7 @@ import random
 import sys, pygame
 import game.breakout_objects as breakout_objects
 
-""" All functions were written by Gabriel C. Ullmann, otherwise noted.
+""" All functions were written by Gabriel C. Ullmann, unless otherwise noted.
 Class representing the Breakout game"""
 class BreakoutGame():
 

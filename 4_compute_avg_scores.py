@@ -1,15 +1,19 @@
 import numpy as np
 import pandas as pd
 
+""" All functions were written by Gabriel C. Ullmann, unless otherwise noted.
+Alogrithms, steps and rewards used in the tests"""
 alg_values = ["ppo", "a2c", "dqn"]
 step_values = ["10000", "50000", "100000", "500000", "1000000"]
 rew_values = ["break-and-follow", "break", "follow"]
 
+""" Path to test result files """
 base_path = "testing/rounds/round1/scores/"
 ds_b = pd.read_csv(base_path + "b20.csv", sep=",")
 ds_f = pd.read_csv(base_path + "f20.csv", sep=",")
 ds_bf = pd.read_csv(base_path + "bf20.csv", sep=",")
 
+""" Get dataset according to reward """
 def get_dataset(reward):
     if reward == "break-and-follow":
         return ds_bf
@@ -17,6 +21,17 @@ def get_dataset(reward):
         return ds_b
     return ds_f
     
+""" Get max/min average score and lives per combination of parameters 
+
+    Arguments
+    ---------
+    score_avgs : array
+        Array of score averages
+    lives_avgs : array
+        Array of life averages
+    combination : array
+        Array of parameter combination names (e.g. PPO | 10K)
+"""
 def get_max_min(score_avgs, lives_avgs, combination):
     max_score = max(score_avgs)
     max_lives = max(lives_avgs)
@@ -37,9 +52,19 @@ def get_max_min(score_avgs, lives_avgs, combination):
     row['top_lives'] = get_top_x(np.array(lives_avgs), top)
     return row
     
+""" Get top X values from array
+
+    Arguments
+    ---------
+    arr : array
+        Array of numerical values
+    x: int
+        Number of top (highest) values you want to extract from it
+"""
 def get_top_x(arr, x):
     return arr[np.argpartition(arr, -x)[-x:]]
 
+""" Get average score/lives by algorithm """
 def get_avg_by_algorithm():
     score_avgs = []
     lives_avgs = []
@@ -63,6 +88,7 @@ def get_avg_by_algorithm():
     results.append(get_max_min(score_avgs, lives_avgs, combination))
     return results
 
+""" Get average score/lives by number of steps """
 def get_avg_by_steps():
     score_avgs = []
     lives_avgs = []
@@ -86,6 +112,7 @@ def get_avg_by_steps():
     results.append(get_max_min(score_avgs, lives_avgs, combination))
     return results
 
+""" Get average score/lives by algorithm vs. number of steps """
 def get_avg_by_alg_steps():
     score_avgs = []
     lives_avgs = []

@@ -6,7 +6,7 @@ from gym import spaces
 from game.breakout_game import BreakoutGame
 import game.breakout_objects as BreakoutObjects
 
-""" All functions were written by Gabriel C. Ullmann, otherwise noted.
+""" All functions were written by Gabriel C. Ullmann, unless otherwise noted.
 OpenAI Gym environment for playing the Breakout game"""
 class BreakoutAgent(gym.Env):
 

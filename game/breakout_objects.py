@@ -1,6 +1,6 @@
 import pygame
 
-""" All functions were written by Gabriel C. Ullmann, otherwise noted.
+""" All functions were written by Gabriel C. Ullmann, unless otherwise noted.
 Main game variables: initial ball and bat speed, number of lives, background color"""
 BALL_XSPEED=2.5
 BALL_YSPEED=2.5
