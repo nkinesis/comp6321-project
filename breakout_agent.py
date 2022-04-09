@@ -11,23 +11,32 @@ Based on code from Mustafa Abushark (2021).
 Source: https://github.com/laserany/snake-ai-model/blob/main/main.py
 
 OpenAI Gym environment for playing the Breakout game"""
+
+
 class BreakoutAgent(gym.Env):
 
-  """ Initialize the agent. It can do 2 actions (go left and right).
-  On every step, it will learn based on 4 observations (positions of the ball and the bat)."""
-  def __init__(self):
-    super(BreakoutAgent, self).__init__()
-    number_of_actions = 2
-    number_of_observations = 4
-    self.action_space = spaces.Discrete(number_of_actions)
-    self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(number_of_observations,), dtype=np.float32)
-    self.game = BreakoutGame()
-    self.observer = BreakoutObjects.Observer()
-    self.prevScore = 0
-    self.game.attach(self.observer)
+    """ Initialize the agent. It can do 2 actions (go left and right).
+    On every step, it will learn based on 4 observations (positions of the ball and the bat)."""
 
-  """ On every step, execute game logic, check game state and reward the agent's actions.
-  
+    def __init__(self):
+        super(BreakoutAgent, self).__init__()
+        number_of_actions = 2
+        number_of_observations = 4
+        self.action_space = spaces.Discrete(number_of_actions)
+        self.observation_space = spaces.Box(
+            low=-np.inf,
+            high=np.inf,
+            shape=(
+                number_of_observations,
+            ),
+            dtype=np.float32)
+        self.game = BreakoutGame()
+        self.observer = BreakoutObjects.Observer()
+        self.prevScore = 0
+        self.game.attach(self.observer)
+
+    """ On every step, execute game logic, check game state and reward the agent's actions.
+
   Arguments
   ---------
   action : int
@@ -38,51 +47,58 @@ class BreakoutAgent(gym.Env):
   obs : tuple
       Array of observations, current reward, whether 'done' (game over), extra state information (scores/lives).
   """
-  def step(self, action):
-    self.game.run_logic(action)
 
-    # default reward is zero
-    reward = 0
-    done = (self.observer.event.lives == 0)
-    info = {"score": self.observer.event.score, "lives": self.observer.event.lives}
+    def step(self, action):
+        self.game.run_logic(action)
 
-    # reward 1: follow the ball
-    ball = self.observer.event.ball.rect
-    bat = self.observer.event.bat.rect
-    dif_l = abs(ball.left - bat.left)
-    dif_r = abs(ball.right - bat.right)    
-    if dif_l < 50 or dif_r < 50:
-      reward = 1
-    else:
-      reward = -1
+        # default reward is zero
+        reward = 0
+        done = (self.observer.event.lives == 0)
+        info = {
+            "score": self.observer.event.score,
+            "lives": self.observer.event.lives}
 
-    # reward 2: break blocks to increase the score
-    if self.observer.event.score - self.prevScore > 0:
-      reward = 100
+        # reward 1: follow the ball
+        ball = self.observer.event.ball.rect
+        bat = self.observer.event.bat.rect
+        dif_l = abs(ball.left - bat.left)
+        dif_r = abs(ball.right - bat.right)
+        if dif_l < 50 or dif_r < 50:
+            reward = 1
+        else:
+            reward = -1
 
-    self.prevScore = self.observer.event.score
-    return np.array([ball.left, ball.right, bat.left, bat.right], dtype=np.float32), reward, done, info
+        # reward 2: break blocks to increase the score
+        if self.observer.event.score - self.prevScore > 0:
+            reward = 100
 
-  """ Make the game go back to its initial state. 
-  
+        self.prevScore = self.observer.event.score
+        return np.array([ball.left, ball.right, bat.left,
+                        bat.right], dtype=np.float32), reward, done, info
+
+    """ Make the game go back to its initial state.
+
   Returns
   ---------
   obs : np.ndarray
       Array of observations.
   """
-  def reset(self):
-    self.game.init_game()
-    ball = self.observer.event.ball.rect
-    bat = self.observer.event.bat.rect
-    return np.array([ball.left, ball.right, bat.left, bat.right], dtype=np.float32)
 
-  """ Draw game on the screen. 
-  
+    def reset(self):
+        self.game.init_game()
+        ball = self.observer.event.ball.rect
+        bat = self.observer.event.bat.rect
+        return np.array([ball.left, ball.right, bat.left,
+                        bat.right], dtype=np.float32)
+
+    """ Draw game on the screen.
+
   Returns
   ---------
   gameScreen : pygame.Surface
       Surface object from pygame.
   """
-  def render(self):
-    self.game.render()
-    return self.game.gameScreen
+
+    def render(self):
+        self.game.render()
+        return self.game.gameScreen

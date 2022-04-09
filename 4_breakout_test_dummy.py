@@ -14,7 +14,7 @@ results_path = "testing/results"
 results_filename = "score_" + timestamp + ".csv"
 
 with open(results_path + "/" + results_filename, "a") as file:
-  file.write("algorithm,iteration,score,lives,timestamp\n")
+    file.write("algorithm,iteration,score,lives,timestamp\n")
 
 env = BreakoutAgent()
 steps = 2000
