@@ -14,6 +14,10 @@ Arguments
 ---------
 name : string
     Name of the sprite inside the assets folder.
+
+Returns
+---------
+    A pygame.Rect.
 """
 def load_game_obj(name):
     return pygame.image.load("game/assets/%s.png" % name).convert().get_rect()
@@ -27,6 +31,10 @@ text : string
 
 width : int
     Position X of the text on the screen. Position Y is always 0 (top of the screen).
+
+Returns
+---------
+    A pygame.Surface (text already rendered on-screen) and a pygame.Rect.
 """
 def draw_text(text, x_pos):
     text = str(text)
@@ -36,16 +44,16 @@ def draw_text(text, x_pos):
     scoretextrect = scoretextrect.move(x_pos - scoretextrect.right, 0)
     return scoretext, scoretextrect
 
-"""Class representing the ball object of the game
+"""Class representing the ball object of the game.
 
-Author: John Cheetham, 2009  
+Author: John Cheetham, 2009.
 """
 class Ball():
     def __init__(self):
         self.sprite = pygame.image.load("game/assets/ball.png").convert()
         self.rect = self.sprite.get_rect()
 
-    """Move the ball to a point on the screen
+    """Move the ball to a point on the screen.
     
     Arguments
     ---------
@@ -58,17 +66,21 @@ class Ball():
     def move(self, x, y):
         self.rect.move(x, y)
 
-    """Check whether the ball has collided with a given pygame.Rect object
+    """Check whether the ball has collided with a given pygame.Rect object.
 
     Arguments
     ---------
     rect : pygame.Rect
-        The pygame.Rect object you want to check for collision
+        The pygame.Rect object you want to check for collision.
+
+    Returns
+    ---------
+        A boolean value: True if colliding, False otherwise.
     """
     def is_collided(self, rect):
         return self.rect.bottom >= rect.top and self.rect.bottom <= rect.bottom and self.rect.right >= rect.left and self.rect.left <= rect.right
 
-"""Class representing the bat object of the game
+"""Class representing the bat object of the game.
 
 Author: John Cheetham, 2009  
 """
@@ -77,22 +89,22 @@ class Bat():
         self.sprite = pygame.image.load("game/assets/bat.png").convert()
         self.rect = self.sprite.get_rect()
 
-    """Move the ball to a point on the screen
+    """Move the ball to a point on the screen.
     
     Arguments
     ---------
     x : int
-        Coordinate x on screen
+        Coordinate x on screen.
 
     y : int
-        Coordinate y on screen
+        Coordinate y on screen.
     """
     def move(self, x, y):
         self.rect.move(x, y)
 
-"""Class representing the wall object (brick) of the game
+"""Class representing the wall object (brick) of the game.
 
-Author: John Cheetham, 2009  
+Author: John Cheetham, 2009.
 """
 class Wall():
     def __init__(self):
@@ -126,7 +138,7 @@ class Wall():
             self.brickrect[i] = self.brickrect[i].move(xpos, ypos)
             xpos = xpos + self.bricklength
 
-"""Class representing a game state change event"""
+"""Class representing a game state change event."""
 class Event():
     def __init__(self, score, lives, bat, ball):
         self.score = score
@@ -134,17 +146,17 @@ class Event():
         self.bat = bat
         self.ball = ball
 
-"""Observer class that watches/notifies game state changes"""
+"""Observer class that watches/notifies game state changes."""
 class Observer():
     def __init__(self):
         self.event = None
 
-    """When a game state is notified, update this is information for all attached observers
+    """When a game state is notified, update this is information for all attached observers.
     
     Arguments
     ---------
     event : Event
-        A game state change event
+        A game state change event.
     """
     def update(self, event: Event):
         self.event = event

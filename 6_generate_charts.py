@@ -62,26 +62,34 @@ ds_f = {
     }
 }
 
-""" Convert string array to uppercase
+""" Convert string array to uppercase.
 
-    Arguments
-    ---------
-    arr : array
-        Array of strings
+Arguments
+---------
+arr : array
+    Array of strings.
+
+Returns
+---------
+    Array of uppercase strings.
 """
 def to_uppercase(arr):
-    res = []
+    arr_upper = []
     for item in arr:
-        res.append(item.upper())
-    return res
+        arr_upper.append(item.upper())
+    return arr_upper
 
 """ Filter 'all rounds' dataset by reward scenario. 
 If no reward informed, return full dataset.
 
-    Arguments
-    ---------
-    reward : string
-        Name of the reward scenario (e.g. break-and-follow).
+Arguments
+---------
+reward : string
+    Name of the reward scenario (e.g. break-and-follow).
+
+Returns
+---------
+    A pandas.DataFrame object, filtered by reward or not.
 """
 def get_ds_all_rounds(reward=None):
     if reward == None:
@@ -91,10 +99,14 @@ def get_ds_all_rounds(reward=None):
 
 """  Get dataset of averages related to a reward scenario. 
 
-    Arguments
-    ---------
-    reward : string
-        Name of the reward scenario (e.g. break-and-follow).
+Arguments
+---------
+reward : string
+    Name of the reward scenario (e.g. break-and-follow).
+
+Returns
+---------
+    A pandas.DataFrame object, filtered by reward or not.
 """
 def get_ds_by_reward(reward):
     if reward == "break-and-follow":
@@ -105,10 +117,14 @@ def get_ds_by_reward(reward):
 
 """ Get color related to a given algorithm in the plots.
 
-    Arguments
-    ---------
-    alg : string
-        Name of the algorithm (e.g. ppo)
+Arguments
+---------
+alg : string
+    Name of the algorithm (e.g. ppo).
+
+Returns
+---------
+    A HEX color code in string form.
 """
 def get_color(alg):
     if alg == "ppo" or alg == "PPO":
@@ -121,20 +137,20 @@ def get_color(alg):
 
 """ Draw matplotlib bar plot
 
-    Arguments
-    ---------
-    order : int
-        Order of appearance of the subplot inside the bigger plot. Ranges from 1 to 6.
-    arr_params : array
-        List of parameters, X-axis of the plot.
-    arr_avgs : array
-        List of score/live averages, Y-axis of the plot.
-    title : string
-        Plot title.        
-    y_label : string
-        Label of the Y-axis (score/lives).    
-    y_max : float
-        Maximum value to be displayed in the Y-axis. Used to adjust the height of the plot. 
+Arguments
+---------
+order : int
+    Order of appearance of the subplot inside the bigger plot. Ranges from 1 to 6.
+arr_params : array
+    List of parameters, X-axis of the plot.
+arr_avgs : array
+    List of score/live averages, Y-axis of the plot.
+title : string
+    Plot title.        
+y_label : string
+    Label of the Y-axis (score/lives).    
+y_max : float
+    Maximum value to be displayed in the Y-axis. Used to adjust the height of the plot. 
 """
 def draw_bar_plot(order, arr_params, arr_avgs, title, y_label, y_max):
     plt.subplot(2, 3, order)
@@ -200,13 +216,13 @@ def generate_comparison_bars():
 
 """ Generate table with combination of top scores/lives
 
-    Arguments
-    ---------
-    min_score : int
-        Filter by scores greater than this
+Arguments
+---------
+min_score : int
+    Filter by scores greater than this
 
-    min_lives : int
-        Filter by number of lives greater than this
+min_lives : int
+    Filter by number of lives greater than this
 """
 def generate_top_scores_table(min_score=250, min_lives=3):
     ds = get_ds_all_rounds()
