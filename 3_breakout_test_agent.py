@@ -5,6 +5,13 @@ from stable_baselines3 import A2C
 from stable_baselines3 import DQN
 from breakout_agent import BreakoutAgent
 
+""" All functions were written by Gabriel C. Ullmann, unless otherwise noted.
+
+This script will test every agent trained during the training process. 
+It reads all model files in the folder testing/results.
+By default it will run just 1 game session for each model.
+You can run several sessions by changing the n_sessions variable.
+"""
 n_sessions = 1
 list_algs = [PPO, A2C, DQN]
 list_algs_names = ["ppo", "a2c", "dqn"]
@@ -20,9 +27,7 @@ env = BreakoutAgent()
 obs = env.reset()
 reward_case = "break-follow"
 
-# for each model and steps
-# test 10 times for 30 seconds (2000 steps)
-
+""" Iterate over all combinations, test, save results """
 for i in range(0, len(list_algs_names)):
   for j in range(0, len(list_steps)):
     model_name = "model_" + list_algs_names[i] + "_" + str(list_steps[j])

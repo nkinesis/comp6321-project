@@ -4,21 +4,29 @@ from stable_baselines3 import A2C
 from stable_baselines3 import DQN
 from breakout_agent import BreakoutAgent
 
-list_algs = [PPO, A2C, DQN]
-list_algs_names = ["ppo", "a2c", "dqn"]
-list_steps = [10000, 50000, 100000, 500000, 1000000]
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-results_path = "testing/results"
-results_filename = "score_" + timestamp + ".csv"
+""" All functions were written by Gabriel C. Ullmann, unless otherwise noted.
 
-# todo
+This script will train agents with all combinations of algorithms and steps.
+The rewards are defined in the BreakoutAgent (default is break-and-follow, the optimal one).
+If you want to speed up the process, you can change the code below to test with just one combination. For example:
+
 list_algs = [PPO]
 list_algs_names = ["ppo"]
 list_steps = [10000]
+"""
+list_algs = [PPO, A2C, DQN]
+list_algs_names = ["ppo", "a2c", "dqn"]
+list_steps = [10000, 50000, 100000, 500000, 1000000]
+
+""" Path to test result files """
+results_path = "testing/results"
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+results_filename = "score_" + timestamp + ".csv"
 
 with open(results_path + "/" + results_filename, "a") as file:
   file.write("algorithm,steps,score,lives,timestamp\n")
 
+""" Iterate over all combinations, train, test for 1 session, save results """
 for i in range(0, len(list_algs)):
   for j in range(0, len(list_steps)):
     model_filename = "_" + list_algs_names[i] + "_" + str(list_steps[j])
