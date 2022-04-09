@@ -10,8 +10,7 @@ On the root folder of this project, there is a requirements.txt file. Use pip to
 ## Main scripts
 You can execute the scripts from 1 to 6, in order. This way you can better understand how the game works, go through the training/testing process, and finally analyze the generated data.
 1. Play Breakout as a human player, with no influence from agents.
-1. Notebook: an overview on training/testing + getting metrics via Tensorboard.
-1. Training code for all combinations of parameters (algorithms and steps).
+1. Notebook: an overview on training/testing + getting metrics via Tensorboard. Script: training code for all combinations of parameters (algorithms and steps).
 1. Testing code: running all combinations of agents on Breakout, recording results.
 1. Testing code: running a "dummy" agent, our baseline.
 1. Compute average scores/lives for each combination of parameters.
