@@ -1,6 +1,13 @@
 from datetime import datetime
 from breakout_agent import BreakoutAgent
 
+""" All functions were written by Gabriel C. Ullmann, unless otherwise noted.
+
+This script will run a 'dummy' agent to play the game.
+This kind of agent only tries random actions, it has not been trained and it does not learn.
+The 'dummy' is useful as a baseline. It is expected that any adequately trained agent will play better than a random one.
+By default it will run just 1 game session. You can run several sessions by changing the n_sessions variable.
+"""
 n_sessions = 1
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 results_path = "testing/results"

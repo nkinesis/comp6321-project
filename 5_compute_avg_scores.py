@@ -13,7 +13,17 @@ ds_b = pd.read_csv(base_path + "b20.csv", sep=",")
 ds_f = pd.read_csv(base_path + "f20.csv", sep=",")
 ds_bf = pd.read_csv(base_path + "bf20.csv", sep=",")
 
-""" Get dataset according to reward """
+""" Get dataset according to reward 
+
+Arguments
+---------
+reward : string
+    Name of the reward scenario (e.g. break-and-follow).
+
+Returns
+---------
+    A pandas.DataFrame object, filtered by reward or not.
+"""
 def get_dataset(reward):
     if reward == "break-and-follow":
         return ds_bf
@@ -23,14 +33,18 @@ def get_dataset(reward):
     
 """ Get max/min average score and lives per combination of parameters 
 
-    Arguments
-    ---------
-    score_avgs : array
-        Array of score averages
-    lives_avgs : array
-        Array of life averages
-    combination : array
-        Array of parameter combination names (e.g. PPO | 10K)
+Arguments
+---------
+score_avgs : array
+    Array of score averages
+lives_avgs : array
+    Array of life averages
+combination : array
+    Array of parameter combination names (e.g. PPO | 10K)
+
+Returns
+---------
+    An array of dicts: min/max average scores/lives, by combination and overall 'top' values.
 """
 def get_max_min(score_avgs, lives_avgs, combination):
     max_score = max(score_avgs)
@@ -52,19 +66,28 @@ def get_max_min(score_avgs, lives_avgs, combination):
     row['top_lives'] = get_top_x(np.array(lives_avgs), top)
     return row
     
-""" Get top X values from array
+""" Get top x values from array.
 
-    Arguments
-    ---------
-    arr : array
-        Array of numerical values
-    x: int
-        Number of top (highest) values you want to extract from it
+Arguments
+---------
+arr : array
+    Array of numerical values.
+x: int
+    Number of top (highest) values you want to extract from it.
+
+Returns
+---------
+    An array containing the top x values.
 """
 def get_top_x(arr, x):
     return arr[np.argpartition(arr, -x)[-x:]]
 
-""" Get average score/lives by algorithm """
+""" Get average score/lives by algorithm 
+
+Returns
+---------
+    An array of dicts: parameter combinations and their respective score/lives average.
+"""
 def get_avg_by_algorithm():
     score_avgs = []
     lives_avgs = []
@@ -88,7 +111,12 @@ def get_avg_by_algorithm():
     results.append(get_max_min(score_avgs, lives_avgs, combination))
     return results
 
-""" Get average score/lives by number of steps """
+""" Get average score/lives by number of steps 
+
+Returns
+---------
+    An array of dicts: parameter combinations and their respective score/lives average.
+"""
 def get_avg_by_steps():
     score_avgs = []
     lives_avgs = []
@@ -112,7 +140,12 @@ def get_avg_by_steps():
     results.append(get_max_min(score_avgs, lives_avgs, combination))
     return results
 
-""" Get average score/lives by algorithm vs. number of steps """
+""" Get average score/lives by algorithm vs. number of steps 
+
+Returns
+---------
+    An array of dicts: parameter combinations and their respective score/lives average.
+"""
 def get_avg_by_alg_steps():
     score_avgs = []
     lives_avgs = []
